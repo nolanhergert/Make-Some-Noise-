@@ -1,0 +1,108 @@
+<head>
+<link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet'>
+<style>
+body {
+    font-family: 'Oswald';
+    font-size: 80vh; /* 80% viewport height */
+    color: white;
+    background: #ff5959;
+    overflow: hidden; /* Hide scrollbars */
+}
+
+.container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+}
+</style>
+
+<script>
+const colors = ["#ff5959", "#6bff72", "#4287f5"]
+const colorsStr = ['red', 'green', 'blue']
+const scores = [0,0,0]
+const namespace = "AEMBOT6443FRC2023_2"
+var colorIndex = 0
+
+// Init keys. No penalty if they already exist
+for (var i = 0; i < 3; i++) {
+  var str = "https://api.countapi.xyz/create?namespace=" + namespace + "&update_lowerbound=-1&update_upperbound=1&key=" + colorsStr[i];
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", str);
+  xhr.responseType = "json";
+  xhr.send();
+}
+
+document.onkeydown = checkKey;
+
+// Right answer sound
+// Generated using: https://softgateon.herokuapp.com/directlink/
+var ding = new Audio('https://docs.google.com/uc?export=download&id=1UkUBQGWxYCJ9iDlNoO7N0GOAiljgNmrL');
+var score = 0;
+
+setInterval( oncePerSecond , 1000 );
+
+setInterval( oncePer30Seconds , 30000 );
+
+function oncePerSecond() {
+  var str = 'https://api.countapi.xyz/get/' + namespace + '/' + colorsStr[colorIndex];
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", str);
+  xhr.responseType = "json";
+  xhr.onload = function() {
+    
+    // If score is different than before, then make a sound
+    if (this.response.value > scores[colorIndex]) {
+    
+    
+    
+      // Does not work after a few minutes?!?! Mute laptops for now
+      // but leave it here for later debugging.
+      ding.play();
+      
+      
+      
+      
+      
+    }
+    document.getElementById('score').innerHTML = this.response.value;
+    scores[colorIndex] = this.response.value;
+  }
+  xhr.send();  
+}
+
+function oncePer30Seconds() {
+   ding.play();
+}
+
+function checkKey(e) {
+
+    e = e || window.event;
+    console.log(e);
+
+    // right arrow -> cycle color
+    if (e.key == 'ArrowRight') {
+       colorIndex = (colorIndex + 1) % colors.length;
+       document.body.style.backgroundColor = colors[colorIndex];
+    }
+    // spacebar -> add one to score w/ sound effect
+    else if (e.key == ' ') {
+      score++;
+      document.getElementById("score").innerHTML = score;
+      ding.play();
+    }
+	  // Accidental press, lower score by one
+	  else if (e.key == 'Delete' || e.key == 'Backspace') {
+      score--;
+      document.getElementById("score").innerHTML = score;
+    }
+
+}
+</script>
+</head>
+<div class="container">
+    <span id="score">0</span>
+</div>
+

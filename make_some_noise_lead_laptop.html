@@ -1,0 +1,67 @@
+<head>
+<link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet'>
+<style>
+
+</style>
+
+<script>
+document.onkeydown = checkKey;
+const namespace = "AEMBOT6443FRC2023_2"
+const colorsStr = ['red', 'green', 'blue']
+
+
+// Right answer sound
+// Generated using: https://softgateon.herokuapp.com/directlink/
+var ding = new Audio('https://docs.google.com/uc?export=download&id=1UkUBQGWxYCJ9iDlNoO7N0GOAiljgNmrL');
+
+let colorMap = new Map();
+colorMap.set('r', 'red');
+colorMap.set('g', 'green');
+colorMap.set('b', 'blue');
+
+for (var i = 0; i < 3; i++) {
+  getValue(colorsStr[i]);
+}
+
+function getValue(color) {
+  var str = "https://api.countapi.xyz/get/" + namespace + "/" + color;
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", str);
+  xhr.responseType = "json";
+  xhr.onload = function() {
+    document.getElementById(color).innerHTML = this.response.value;
+  }
+  xhr.send();
+}
+
+
+function checkKey(e) {
+
+    e = e || window.event;
+    console.log(e);
+    var key = e.key;
+
+    // Increment by one point
+    if (key == 'r' || key == 'g' || key == 'b') {
+      var str = 'https://api.countapi.xyz/update/' + namespace + '/' + colorMap.get(key) + '?amount=1';
+      ding.play();
+    // Decrement by one point
+    } else if (key == 'R' || key == 'G' || key == 'B') {
+      key = key.toLowerCase();
+      var str = 'https://api.countapi.xyz/update/' + namespace + '/' + colorMap.get(key) + '?amount=-1';
+    }
+    
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", str);
+    xhr.responseType = "json";
+    xhr.onload = function() {
+      document.getElementById(colorMap.get(key)).innerHTML = this.response.value;
+    }
+    xhr.send();
+}
+</script>
+</head>
+<div class="container">
+    Red: <span id="red">0</span>, Green: <span id="green">0</span>, Blue: <span id="blue">0</span>
+</div>
+
