@@ -1,0 +1,32 @@
+Chrome Version       : 113.0.5672.126
+URLs (if applicable) : https://nolanhergert.github.io/chromium_intermittent_sound_timeout/index.html
+Other browsers tested:
+  Add OK or FAIL, along with the version, after other browsers where you
+have tested this issue:
+     Safari: UNTESTED        
+    Firefox: OK
+       Edge: FAIL
+
+What steps will reproduce the problem?
+(1) Open example page, which plays a ding sound every 30 seconds.
+(2) Wait 5 minutes
+
+What is the expected result?
+The sound continues to play.
+
+
+What happens instead?
+The sound stops playing.
+
+
+Please provide any additional information below. Attach a screenshot if
+possible.
+  * Does not matter if you interact with the page with keybord or mouse during 5 minutes. But works again if you reload the page.
+  * Does not repro with 10 and 20 seconds between dings. Easy to adjust this value in the code.
+  * Does not repro with the HTML file on the web
+  * Does not repro with a local sound file.
+
+  
+My use case was for a game show using Google Slides which had transition sounds, as well as a "score-keeping" laptops that listened for a web API to play a sound. Both stopped working properly after 5 minutes.
+
+Based on the test file, I'm not sure why the Google Slides didn't work, but maybe it's running off a cached HTML file.
