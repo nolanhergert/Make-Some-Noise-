@@ -1,67 +1,72 @@
 <head>
-<link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet'>
-<style>
-
-</style>
-
-<script>
-document.onkeydown = checkKey;
-const namespace = "AEMBOT6443FRC2023_2"
-const colorsStr = ['red', 'green', 'blue']
-
-
-// Right answer sound
-// Generated using: https://softgateon.herokuapp.com/directlink/
-var ding = new Audio('https://docs.google.com/uc?export=download&id=1UkUBQGWxYCJ9iDlNoO7N0GOAiljgNmrL');
-
-let colorMap = new Map();
-colorMap.set('r', 'red');
-colorMap.set('g', 'green');
-colorMap.set('b', 'blue');
-
-for (var i = 0; i < 3; i++) {
-  getValue(colorsStr[i]);
-}
-
-function getValue(color) {
-  var str = "https://api.countapi.xyz/get/" + namespace + "/" + color;
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", str);
-  xhr.responseType = "json";
-  xhr.onload = function() {
-    document.getElementById(color).innerHTML = this.response.value;
+  <link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet'>
+  <style>
+  
+  </style>
+  
+  <script>
+  document.onkeydown = checkKey;
+  const namespace = "AEMBOT6443FRC2023_2"
+  const server_ip_address = "http://192.168.86.21"
+  var scores = [0,0,0]
+  
+  let colorMap = new Map();
+  colorMap.set('r', '0');
+  colorMap.set('g', '1');
+  colorMap.set('b', '2');
+  
+  for (var i = 0; i < 3; i++) {
+    getValue(i);
   }
-  xhr.send();
-}
-
-
-function checkKey(e) {
-
-    e = e || window.event;
-    console.log(e);
-    var key = e.key;
-
-    // Increment by one point
-    if (key == 'r' || key == 'g' || key == 'b') {
-      var str = 'https://api.countapi.xyz/update/' + namespace + '/' + colorMap.get(key) + '?amount=1';
-      ding.play();
-    // Decrement by one point
-    } else if (key == 'R' || key == 'G' || key == 'B') {
-      key = key.toLowerCase();
-      var str = 'https://api.countapi.xyz/update/' + namespace + '/' + colorMap.get(key) + '?amount=-1';
-    }
-    
+  
+  function getValue(color_index) {
+    var str = server_ip_address + "/" + color_index;
     var xhr = new XMLHttpRequest();
     xhr.open("GET", str);
-    xhr.responseType = "json";
+    xhr.responseType = "text";
     xhr.onload = function() {
-      document.getElementById(colorMap.get(key)).innerHTML = this.response.value;
+    score = parseInt(this.response);
+    scores[color_index] = score;
+      document.getElementById(color_index).innerHTML = score;
     }
     xhr.send();
-}
-</script>
-</head>
-<div class="container">
-    Red: <span id="red">0</span>, Green: <span id="green">0</span>, Blue: <span id="blue">0</span>
-</div>
-
+  }
+  
+  
+  function checkKey(e) {
+  
+      e = e || window.event;
+      var key = e.key;
+    color_index = colorMap.get(key.toLowerCase());
+    
+    console.log(key);
+      // Increment by one point
+      if (key == 'r' || key == 'g' || key == 'b') {
+      var new_value = (scores[color_index] + 1);
+      // Decrement by one point
+      } else if (key == 'R' || key == 'G' || key == 'B') {
+        key = key.toLowerCase();
+      var new_value = (scores[color_index] - 1);
+      } else {
+      return
+    }
+    
+    var str = server_ip_address + "/" + color_index + "/" + new_value;
+      
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", str);
+      xhr.responseType = "text";
+      xhr.onload = function() {
+      var score = parseInt(this.response);
+        document.getElementById(color_index).innerHTML = score;
+      scores[color_index] = score;
+      }
+      xhr.send();
+  }
+  </script>
+  </head>
+  <div class="container">
+      Red: <span id="0">0</span>, Green: <span id="1">0</span>, Blue: <span id="2">0</span>
+  </div>
+  
+  
