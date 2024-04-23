@@ -3,7 +3,7 @@ import socketserver
 import logging
 
 PORT = 80
-scores = [1,0,0]
+scores = [0,0,0]
  
 class S(http.server.SimpleHTTPRequestHandler):
     def _set_response(self):
