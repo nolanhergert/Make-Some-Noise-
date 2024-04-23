@@ -8,6 +8,7 @@
   document.onkeydown = checkKey;
   const namespace = "AEMBOT6443FRC2023_2"
   const server_ip_address = "http://192.168.86.21"
+  var ding = new Audio('right_answer_ding.mp3');
   var scores = [0,0,0]
   
   let colorMap = new Map();
@@ -43,6 +44,7 @@
       // Increment by one point
       if (key == 'r' || key == 'g' || key == 'b') {
       var new_value = (scores[color_index] + 1);
+      ding.play();
       // Decrement by one point
       } else if (key == 'R' || key == 'G' || key == 'B') {
         key = key.toLowerCase();
